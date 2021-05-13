@@ -1,5 +1,7 @@
 # fill config
 import sys
+import shutil
+
 local = False
 user = 'wes'
 accepted = ['-local', 'fill_config.py', '-seth', '-wes']
@@ -15,9 +17,12 @@ if '-local' in sys.argv:
 if '-seth' in sys.argv:
     user = 'seth'
 
-
+if not local:
+    os.mkdir('/root/.aws/')
+    creds = '/content/drive/MyDrive/feature-attribution/config/'+current_settings.name+'-credentials'
+    shutil.copy(creds, '/root/.aws/credentials')
+    shutil.copy('/content/drive/MyDrive/feature-attribution/config/config','/root/.aws/')
 
 with open('config.txt', 'w') as f:
     f.write('user:%s\n' % (user))
     f.write('local:%s\n' % (str(local)))
-    
