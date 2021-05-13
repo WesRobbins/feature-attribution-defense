@@ -1,11 +1,12 @@
 class Settings:
     def __init__(self):
-        with open('config.txt', 'r') as f:
+        with open('config/config.txt', 'r') as f:
             config_dict = dict(line.strip().split(':') for line in f)
         self.name = config_dict['user']
         self.local = config_dict['local']
+        self.datasets = config_dict['datasets'].split(',')
         if self.local:
-            self.file_name = file_name = './local_config/settings'
+            self.file_name = file_name = './config/'+self.name+'-settings.txt'
         if not self.local:
             self.file_name = '/content/drive/MyDrive/feature-attribution/config/'+name+'-settings'
         settings = self.read_settings_file()
