@@ -42,7 +42,7 @@ class Settings:
         print(f'model_name:\t{self.model_name}')
         print(f'dataset:\t{self.dataset}')
         print(f'current result id: {self.current_result_id}')
-        print(f'loaded datasets: {self.datasets})
+        print(f'loaded datasets: {self.datasets}')
 
 
     def set_model_name(name):
