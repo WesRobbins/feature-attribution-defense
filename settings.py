@@ -5,8 +5,12 @@ class Settings:
         self.name = config_dict['user']
         if config_dict['local'] == 'False':
             self.local = False
-        else:
+        elif config_dict['local'] == 'True':
             self.local = True
+        else:
+            print('Error: wrong value for local in config')
+            sys.exit(0)
+        print(self.local)
 
         self.local = bool(config_dict['local'])
         self.datasets = config_dict['datasets'].split(',')
