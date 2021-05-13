@@ -3,6 +3,11 @@ class Settings:
         with open('config/config.txt', 'r') as f:
             config_dict = dict(line.strip().split(':') for line in f)
         self.name = config_dict['user']
+        if config_dict['local'] == 'False':
+            self.local = False
+        else:
+            self.local = True
+
         self.local = bool(config_dict['local'])
         self.datasets = config_dict['datasets'].split(',')
         if self.local:
