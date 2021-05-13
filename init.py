@@ -1,6 +1,6 @@
 # library imports
 import shutil
-
+import os
 # repo file imports
 from settings import current_settings
 import database
@@ -8,6 +8,7 @@ import database
 """ config files copied from drive """
 
 if not current_settings.local:
+    os.mkdir('/root/.aws/')
     creds = '/content/drive/MyDrive/feature-attribution/config/'+current_settings.name+'-credentials'
     shutil.copy(creds, '/root/.aws/credentials')
     shutil.copy('/content/drive/MyDrive/feature-attribution/config/config','/root/.aws/')
