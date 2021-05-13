@@ -23,7 +23,7 @@ if '-seth' in sys.argv:
 
 if not local:
     os.mkdir('/root/.aws/')
-    creds = '/content/drive/MyDrive/feature-attribution/config/'+user+'-credentials'
+    creds = '/content/drive/MyDrive/feature-attribution/config/'+user+'-credentials.txt'
     shutil.copy(creds, '/root/.aws/credentials')
     shutil.copy('/content/drive/MyDrive/feature-attribution/config/config','/root/.aws/')
 
