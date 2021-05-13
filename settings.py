@@ -3,7 +3,7 @@ class Settings:
         with open('config/config.txt', 'r') as f:
             config_dict = dict(line.strip().split(':') for line in f)
         self.name = config_dict['user']
-        self.local = config_dict['local']
+        self.local = bool(config_dict['local'])
         self.datasets = config_dict['datasets'].split(',')
         if self.local:
             self.file_name = file_name = './config/'+self.name+'-settings.txt'
