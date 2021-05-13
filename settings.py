@@ -10,14 +10,12 @@ class Settings:
         else:
             print('Error: wrong value for local in config')
             sys.exit(0)
-        print(self.local)
 
-        self.local = bool(config_dict['local'])
         self.datasets = config_dict['datasets'].split(',')
         if self.local:
-            self.file_name = file_name = './config/'+self.name+'-settings.txt'
+            self.file_name = './config/'+self.name+'-settings.txt'
         if not self.local:
-            self.file_name = '/content/drive/MyDrive/feature-attribution/config/'+name+'-settings'
+            self.file_name = './config/'+self.name+'-settings.txt'#'/content/drive/MyDrive/feature-attribution/config/'+name+'-settings'
         settings = self.read_settings_file()
 
 
