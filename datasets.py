@@ -8,12 +8,6 @@ if not current_settings.local:
     from settings import current_settings
 
 
-    if torch.cuda.is_available():
-      device = torch.device('cuda:0')
-      print('GPU')
-    else:
-      device = torch.device('cpu')
-      print('cpu')
 
     transform = transforms.Compose(
         [transforms.ToTensor(),
