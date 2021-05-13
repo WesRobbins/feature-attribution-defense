@@ -12,7 +12,7 @@ for i in sys.argv:
         print(f'accpted arguements are {accepted}')
         exit()
 
-datasets = 'mnsit,cifar'
+datasets = 'mnist,cifar'
 if '-local' in sys.argv:
     local = True
     datasets = ''
@@ -26,6 +26,8 @@ if not local:
     creds = '/content/drive/MyDrive/feature-attribution/config/'+user+'-credentials.txt'
     shutil.copy(creds, '/root/.aws/credentials')
     shutil.copy('/content/drive/MyDrive/feature-attribution/config/config','/root/.aws/')
+
+
 
 
 with open('config/config.txt', 'w') as f:
