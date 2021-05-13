@@ -1,0 +1,3 @@
+model_name:VGG16
+dataset:mnist
+current_result_id:2
