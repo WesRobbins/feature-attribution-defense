@@ -1,5 +1,6 @@
 from settings import current_settings
 if not current_settings.local:
+    print('Dataset Imports')
     import torchvision
     import torchvision.transforms as transforms
     from torch.utils.data import DataLoader
