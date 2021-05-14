@@ -12,15 +12,18 @@ if not current_settings.local:
     transform = transforms.Compose(
         [transforms.ToTensor(),
          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
+    cifar_transform = = transforms.Compose(
+        [transforms.ToTensor(),
+         transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2471, 0.2435, 0.2616))])
 
 
 data = {}
 
 batch_size = 64
 if 'cifar' in current_settings.datasets:
-    data['cifar_trs'] = datasets.CIFAR10(root='/content/data/cifar', train=True, download=True, transform=transform)
+    data['cifar_trs'] = datasets.CIFAR10(root='/content/data/cifar', train=True, download=True, transform=cifar_transform)
     data['cifar_trl'] = DataLoader(data['cifar_trs'], batch_size=64,shuffle=True, num_workers=2)
-    data['cifar_ts'] = datasets.CIFAR10(root='/content/data/cifar', train=False, download=True, transform=transform)
+    data['cifar_ts'] = datasets.CIFAR10(root='/content/data/cifar', train=False, download=True, transform=cifar_transform)
     data['cifar_tl'] = DataLoader(data['cifar_ts'], batch_size=64, shuffle=False, num_workers=2)
     cifar_classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 

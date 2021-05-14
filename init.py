@@ -14,4 +14,4 @@ database = database.Database()
 results = []
 
 """ path set up """
-sys.path.insert(1, '/content/cifar-pytorch')
+sys.path.insert(1, '/content/cifar-pytorch/cifar10_models')
