@@ -27,6 +27,10 @@ if not local:
     shutil.copy(creds, '/root/.aws/credentials')
     shutil.copy('/content/drive/MyDrive/feature-attribution/config/config','/root/.aws/')
 
+    from git import Repo
+
+    Repo.clone_from('https://github.com/huyvnphan/PyTorch_CIFAR10', '/content/cifar-pytorch')
+
 
 
 
