@@ -11,8 +11,6 @@ import database
 from datasets import data
 
 # colab only imports
-if not current_settings.local:
-    import models.load_models
 
 
 """ global vars """
@@ -22,6 +20,7 @@ results = []
 """ path set up """
 if not current_settings.local:
     sys.path.insert(1, '/content/cifar-pytorch/cifar10_models')
+    sys.path.insert(1, '/contet/feature-attribution-defense/models')
 if current_settings.local:
     sys.path.insert(1, '/Users/wesrobbins/Desktop/cp/research-repos/feature-attribution-defense')
 
@@ -48,6 +47,7 @@ model_set_names = {
 }
 
 if not current_settings.local:
+    import load_models
     loaded_models = load_models.load_models(model_set_names[current_settings.model_set])
 
 
