@@ -1,6 +1,7 @@
 # load models into runtime
 
 import torch
+import sys
 
 from vgg import vgg11_bn, vgg13_bn, vgg16_bn, vgg19_bn
 from densenet import densenet121, densenet161, densenet169
@@ -15,7 +16,7 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 def load_models(names):
   loaded_nets = {}
   for dataset in names:
-      for name in dataset:
+      for name in names[dataset]:
         net = get_net(name)
         # net = torch.nn.DataParallel(net)
         assert os.path.isfile('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/'+dataset+'/state_dicts/'+name+'.pt'), 'Error: no checkpoint directory found!'
