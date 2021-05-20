@@ -14,13 +14,15 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def load_models(names):
   loaded_nets = {}
-  for name in names:
-    net = get_net(name)
-    # net = torch.nn.DataParallel(net)
-    assert os.path.isfile('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/cifar/state_dicts/'+name+'.pt'), 'Error: no checkpoint directory found!'
-    checkpoint = torch.load('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/cifar/state_dicts/'+name+'.pt')
-    net.load_state_dict(checkpoint)
-    loaded_nets[name]=net
+  for dataset in names:
+      for name in dataset:
+        net = get_net(name)
+        # net = torch.nn.DataParallel(net)
+        assert os.path.isfile('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/'+dataset+'/state_dicts/'+name+'.pt'), 'Error: no checkpoint directory found!'
+        checkpoint = torch.load('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/'+dataset+'/state_dicts/'+name+'.pt')
+        net.load_state_dict(checkpoint)
+        m_name = dataset + '-' + name
+        loaded_nets[m_name]=net
     # best_acc = checkpoint['acc']
     # start_epoch = checkpoint['epoch']
     # sp = ' '*(12-len(name))

@@ -1,8 +1,11 @@
+import colorama
+from colorama import Fore, Back, Style
 class Settings:
     def __init__(self):
         with open('config/config.txt', 'r') as f:
             config_dict = dict(line.strip().split(':') for line in f)
         self.name = config_dict['user']
+        self.model_set = config_dict['model_set']
         if config_dict['local'] == 'False':
             self.local = False
         elif config_dict['local'] == 'True':
@@ -21,7 +24,6 @@ class Settings:
 
         self.model_name = settings['model_name']
         self.dataset = settings['dataset']
-        self.current_result_id = int(settings['current_result_id'])
 
 
     def read_settings_file(self):
@@ -38,18 +40,20 @@ class Settings:
         settings = {
             'model_name': self.model_name,
             'dataset': self.dataset,
-            'current_result_id': self.current_result_id
+            'model_set': self.model_set
         }
         return settings
 
     def print_settings(self):
         print('\nSettings Initalized as')
         print('++++++++++++++++++++++++')
-        print(f'user:\t\t{self.name}')
-        print(f'model_name:\t{self.model_name}')
-        print(f'dataset:\t{self.dataset}')
-        print(f'current result id: {self.current_result_id}')
-        print(f'loaded datasets: {self.datasets}')
+        print(f'{Back.MAGENTA}user:\t\t\t{self.name}')
+        print(f'model_set:\t\t{self.model_set}')
+        print(f'loaded datasets:\t{self.datasets}')
+        print(f'model_name:\t\t{self.model_name}')
+        print(f'dataset:\t\t{self.dataset}')
+        print(Style.RESET_ALL)
+        print()
 
 
     def set_model_name(name):
@@ -60,9 +64,6 @@ class Settings:
         self.dataset = set_dataset
         self.write_settings_file()
 
-    def set_current_results_id(id):
-        self.current_result_id = id
-        self.write_settings_file()
 
 
 

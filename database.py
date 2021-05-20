@@ -60,7 +60,7 @@ class Database:
 
         self.table.put_item(
         Item={
-            'id': current_settings.current_result_id,
+            'id': self.get_id(),
             'attack': attack,
             'defense': defense,
             'attack_strength': str(attack_strength),
@@ -96,3 +96,38 @@ class Database:
         })
         item = response['Item']
         print(item)
+
+    def delete(self, id):
+        response = self.table.delete_item(
+            Key={
+                'id': id,
+            })
+
+
+    def get_id(self):
+        response = self.table.scan(
+            FilterExpression=Key('id').gte(0)
+        )
+        items = response['Items']
+        max_id = -1
+        for i in items:
+            if int(i['id']) > max_id:
+                max_id = int(i['id'])
+
+        return max_id+1
+
+    def show_all(self):
+        print('\n** All Results in Database **')
+        print('-----------------------------------------------------------------------------')
+        print('id  attack     defense    atck-stren  model       dataset   acc   loss  f1')
+        print('-----------------------------------------------------------------------------')
+        response = self.table.scan(
+            FilterExpression=Key('id').gte(0)
+        )
+        items = response['Items']
+        if len(items) == 0:
+            print("No items in database\n")
+        for i in reversed(items):
+            print(f"{i['id']:2}  {i['attack']:10} {i['defense']:10} {i['attack_strength']:12}"
+                f"{i['model']:11} {i['dataset']:9} {i['accuracy']:5} {i['loss']:5} {i['f1']:5}")
+        print()

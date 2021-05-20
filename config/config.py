@@ -3,6 +3,7 @@ import os
 import sys
 import shutil
 
+
 local = False
 user = 'wes'
 accepted = ['-local', 'config/config.py','config.py', '-seth', '-wes']
@@ -12,10 +13,12 @@ for i in sys.argv:
         print(f'accpted arguements are {accepted}')
         exit()
 
+model_set = 'all_models'
 datasets = 'mnist,cifar'
 if '-local' in sys.argv:
     local = True
     datasets = ''
+    model_set = 'no_models'
 
 
 if '-seth' in sys.argv:
@@ -38,3 +41,4 @@ with open('config/config.txt', 'w') as f:
     f.write('user:%s\n' % (user))
     f.write('local:%s\n' % (str(local)))
     f.write('datasets:%s\n' % (datasets))
+    f.write('model_set:%s\n' % (model_set))
