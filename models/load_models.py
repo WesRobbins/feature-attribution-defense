@@ -28,6 +28,7 @@ def load_models(names):
         net.load_state_dict(checkpoint)
         m_name = dataset + '-' + name
         loaded_nets[m_name]=net
+      print()
     # best_acc = checkpoint['acc']
     # start_epoch = checkpoint['epoch']
     # sp = ' '*(12-len(name))

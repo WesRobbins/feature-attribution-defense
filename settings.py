@@ -46,7 +46,7 @@ class Settings:
 
     def print_settings(self):
         print('\nSettings Initalized as')
-        print('++++++++++++++++++++++++')
+        print('--------------------------------------')
         print(f'{Back.MAGENTA}user:\t\t\t{self.name}')
         print(f'model_set:\t\t{self.model_set}')
         print(f'loaded datasets:\t{self.datasets}')
