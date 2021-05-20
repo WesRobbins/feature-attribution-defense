@@ -2,6 +2,7 @@
 
 import torch
 import sys
+import os
 
 from vgg import vgg11_bn, vgg13_bn, vgg16_bn, vgg19_bn
 from densenet import densenet121, densenet161, densenet169
@@ -14,9 +15,12 @@ from resnet_orig import resnet_orig
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 def load_models(names):
+  print("\n LOADING Models")
   loaded_nets = {}
   for dataset in names:
+      print(dataset + ':')
       for name in names[dataset]:
+        print(name+'..', end='')
         net = get_net(name)
         # net = torch.nn.DataParallel(net)
         assert os.path.isfile('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/'+dataset+'/state_dicts/'+name+'.pt'), 'Error: no checkpoint directory found!'
@@ -28,6 +32,7 @@ def load_models(names):
     # start_epoch = checkpoint['epoch']
     # sp = ' '*(12-len(name))
     # print(f'{name}{sp}   Epoch: {start_epoch} Acc: {best_acc}')
+  print()
   return loaded_nets
 
 
