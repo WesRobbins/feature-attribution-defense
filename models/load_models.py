@@ -23,7 +23,7 @@ def load_models(names):
         print(name+'..', end='')
         net = get_net(name)
         # net = torch.nn.DataParallel(net)
-        assert os.path.isfile('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/'+dataset+'/state_dicts/'+name+'.pt'), 'Error: no checkpoint directory found!'
+        # assert os.path.isfile('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/'+dataset+'/state_dicts/'+name+'.pt'), 'Error: no checkpoint directory found!'
         checkpoint = torch.load('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/'+dataset+'/state_dicts/'+name+'.pt')
         net.load_state_dict(checkpoint)
         m_name = dataset + '-' + name
