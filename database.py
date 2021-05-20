@@ -56,7 +56,9 @@ class Database:
         assert attack in ['none', 'fgsm']
         assert defense in ['none']
         assert dataset in ['cifar', 'mnist', 'imagenet']
-        assert model in ['resnet', 'VGG16']
+        assert model in ['vgg11_bn', 'vgg13_bn', 'vgg16_bn', 'vgg19_bn', 'densenet121', 'densenet161',
+               'densenet169', 'googlenet', 'inception_v3', 'mobilenet_v2', 'resnet18', 'resnet34',
+               'resnet50']
 
         self.table.put_item(
         Item={
