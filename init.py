@@ -49,7 +49,7 @@ model_set_names = {
 if not current_settings.local:
     import load_models
     from load_models import load_models
-    from loaad_models import device
+    from load_models import device
 
     loaded_models = load_models(model_set_names[current_settings.model_set])
 
