@@ -48,7 +48,9 @@ model_set_names = {
 
 if not current_settings.local:
     import load_models
-    loaded_models = load_models.load_models(model_set_names[current_settings.model_set])
+    from load_models import load_models
+
+    loaded_models = load_models(model_set_names[current_settings.model_set])
 
 
 current_settings.print_settings()
