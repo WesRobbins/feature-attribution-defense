@@ -1,3 +1,4 @@
 boto3
 gitpython
 colorama
+prorgessbar2
