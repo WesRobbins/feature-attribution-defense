@@ -25,7 +25,7 @@ def model_bar_graph(results, attack='none', defense='none', metric='acc', datase
     elif metric == 'loss':
         data = loss
     df = pd.DataFrame(list(zip(names, data)), columns =['Name', metric])
-    print(df)
+
 
     ax = sns.barplot(x="Name", y=metric, data=df)
 

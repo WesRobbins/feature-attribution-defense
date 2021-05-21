@@ -14,6 +14,18 @@ from resnet_orig import resnet_orig
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
+class Normalize(nn.Module) :
+    def __init__(self, mean, std) :
+        super(Normalize, self).__init__()
+        self.register_buffer('mean', torch.Tensor(mean))
+        self.register_buffer('std', torch.Tensor(std))
+
+    def forward(self, input):
+        # Broadcasting
+        mean = self.mean.reshape(1, 3, 1, 1)
+        std = self.std.reshape(1, 3, 1, 1)
+        return (input - mean) / std
+
 def load_models(names):
   print("\n LOADING Models")
   loaded_nets = {}
@@ -27,6 +39,16 @@ def load_models(names):
         checkpoint = torch.load('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/'+dataset+'/state_dicts/'+name+'.pt')
         net.load_state_dict(checkpoint)
         m_name = dataset + '-' + name
+
+        # norm layer
+        norm_layer = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+
+        net = nn.Sequential(
+            norm_layer,
+            net,
+        ).to(device)
+
+        net = net.eval()
         loaded_nets[m_name]=net
       print()
     # best_acc = checkpoint['acc']

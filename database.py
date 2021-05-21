@@ -96,11 +96,28 @@ class Database:
         item = response['Item']
         print(item)
 
-    def delete(self, id):
-        response = self.table.delete_item(
-            Key={
-                'id': id,
-            })
+    def delete(self, id, id2=None):
+        if type(id) == list:
+            for i in id:
+                response = self.table.delete_item(
+                    Key={
+                        'id': i,
+                    })
+        elif not id2:
+            response = self.table.delete_item(
+                Key={
+                    'id': id,
+                })
+        elif type(id) == int and id2:
+            for i in range(id, id2+1):
+                try:
+                    response = self.table.delete_item(
+                        Key={
+                            'id': i,
+                        })
+                except:
+                    printf(f'DB: no key {i}')
+
 
 
     def get_id(self):
