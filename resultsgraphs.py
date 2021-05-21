@@ -65,8 +65,6 @@ def defense_bar_graph(results, model, attack='none', defense='none', metric='acc
     elif metric == 'loss':
         data = loss
     df = pd.DataFrame(list(zip(names, data)), columns =['Name', metric])
-    print(df)
-
     ax = sns.barplot(x="Name", y=metric, data=df)
 
     subtitle_string = "Dataset: " + dataset + "      Attack: " +attack+ "      Defense: " + defense

@@ -115,7 +115,7 @@ class Database:
 
         return max_id+1
 
-    def show_all(self):
+    def show_all(self, sort='id'):
         print('\n** All Results in Database **')
         print('-------------------------------------------------------------------------------')
         print('id  attack     defense    atck-stren  model         dataset   acc    loss   l2')
@@ -124,6 +124,7 @@ class Database:
             FilterExpression=Key('id').gte(0)
         )
         items = response['Items']
+        items.sort(key=lambda x: x[sort])
         if len(items) == 0:
             print("No items in database\n")
         for i in reversed(items):

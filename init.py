@@ -12,7 +12,8 @@ from datasets import data
 from resultsgraphs import *
 
 # colab only imports
-
+if not current_settings.local:
+    import torchattacks
 
 """ global vars """
 db = database.Database()
