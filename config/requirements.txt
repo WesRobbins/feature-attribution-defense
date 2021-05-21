@@ -1,4 +1,5 @@
 boto3
 gitpython
+torchattacks
 colorama
 progressbar2

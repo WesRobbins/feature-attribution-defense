@@ -12,7 +12,7 @@
 #   - dataset: name of dataset
 #       options: cifar, mnist, imagenet
 #   - accuracy
-#   - f1
+#   - l2
 #   - loss
 #   - description: any interesting info to add
 
@@ -43,7 +43,7 @@ class Database:
 
     def write_result(self, attack='none', defense='none', attack_strength='n/a',
                     model=None, dataset=None,
-                    accuracy='n/a', loss='n/a', f1='n/a', description='none'):
+                    accuracy='n/a', loss='n/a', l2='n/a', description='none'):
 
         global current_settings
 
@@ -68,7 +68,7 @@ class Database:
             'dataset': dataset,
             'accuracy': str(accuracy),
             'loss': str(loss),
-            'f1': str(f1),
+            'l2': str(l2),
             'description': description,
 
         })
@@ -118,7 +118,7 @@ class Database:
     def show_all(self):
         print('\n** All Results in Database **')
         print('-------------------------------------------------------------------------------')
-        print('id  attack     defense    atck-stren  model         dataset   acc    loss   f1')
+        print('id  attack     defense    atck-stren  model         dataset   acc    loss   l2')
         print('-------------------------------------------------------------------------------')
         response = self.table.scan(
             FilterExpression=Key('id').gte(0)
@@ -130,5 +130,5 @@ class Database:
             index = i['model'].find('-')
             name = i['model'][index+1:]
             print(f"{i['id']:2}  {i['attack']:10} {i['defense']:10} {i['attack_strength']:12}"
-                f"{name:13} {i['dataset']:9} {i['accuracy']:6} {i['loss'][:5]:6} {i['f1']:5}")
+                f"{name:13} {i['dataset']:9} {i['accuracy']:6} {i['loss'][:5]:6} {i['l2']:5}")
         print()
