@@ -9,18 +9,20 @@ from importlib import reload
 from settings import current_settings
 import database
 from datasets import data
+from resultsgraphs import *
 
 # colab only imports
 
 
 """ global vars """
 db = database.Database()
-results = []
+results = db.load_all()
 
 """ path set up """
 if not current_settings.local:
     sys.path.insert(1, '/content/cifar-pytorch/cifar10_models')
     sys.path.insert(1, '/content/feature-attribution-defense/models')
+    sys.path.insert(1, '/content/art-git')
 if current_settings.local:
     sys.path.insert(1, '/Users/wesrobbins/Desktop/cp/research-repos/feature-attribution-defense')
 

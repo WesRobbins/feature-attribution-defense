@@ -6,16 +6,26 @@ import shutil
 
 local = False
 user = 'wes'
-accepted = ['-local', 'config/config.py','config.py', '-seth', '-wes']
+accepted = ['-local', 'config/config.py','config.py', '-seth', '-wes',
+            '-cmi', '-cm', '-mi', '-ci', '-c', '-m', '-i']
 
 for i in sys.argv:
     if i not in accepted:
         print(f'Error: \"{i}\" is not an accpeted arguement')
         print(f'accpted arguements are {accepted}')
         exit()
-
-model_set = 'all_models'
 datasets = 'mnist,cifar'
+if '-c' in sys.argv:
+    datasets = 'cifar'
+elif '-m' in sys.argv:
+    datasets = 'mnists'
+elif '-i' in sys.argv:
+    datasets = 'imagenet'
+elif '-cmi' in sys.argv:
+    datasets = 'cifar,mnist,imagenet'
+    
+model_set = 'all_models'
+
 if '-local' in sys.argv:
     local = True
     datasets = ''

@@ -12,13 +12,14 @@ class Result:
         self.model = data['model']
         self.dataset = data['dataset']
         self.attack = data['attack']
+        self.defense = data['defense']
         self.description = data['description']
         if data['attack_strength'] in ['none', 'n/a']: self.attack_strength = 'n/a'
         else: self.attack_strength = float(data['attack_strength'])
         if data['loss'] == 'n/a': self.loss = 'n/a'
-        else: self.loss = float(data)
+        else: self.loss = float(data['loss'])
         if data['accuracy'] == 'n/a': self.accuracy = 'n/a'
-        else: self.accuracy = float(accuracy)
+        else: self.accuracy = float(data['accuracy'])
 
 
 

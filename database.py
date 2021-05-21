@@ -56,7 +56,7 @@ class Database:
         assert attack in ['none', 'fgsm']
         assert defense in ['none']
         assert dataset in ['cifar', 'mnist', 'imagenet']
-    
+
 
         self.table.put_item(
         Item={
@@ -87,7 +87,6 @@ class Database:
         assert attack in ['none', 'fgsm']
         assert defense in ['none']
         assert dataset in ['cifar', 'mnist', 'imagenet']
-        assert model in ['resnet', 'VGG16']
 
         response = table.get_item(
         Key={
@@ -118,9 +117,9 @@ class Database:
 
     def show_all(self):
         print('\n** All Results in Database **')
-        print('-----------------------------------------------------------------------------')
-        print('id  attack     defense    atck-stren  model       dataset   acc   loss  f1')
-        print('-----------------------------------------------------------------------------')
+        print('-------------------------------------------------------------------------------')
+        print('id  attack     defense    atck-stren  model         dataset   acc    loss   f1')
+        print('-------------------------------------------------------------------------------')
         response = self.table.scan(
             FilterExpression=Key('id').gte(0)
         )
@@ -128,6 +127,8 @@ class Database:
         if len(items) == 0:
             print("No items in database\n")
         for i in reversed(items):
+            index = i['model'].find('-')
+            name = i['model'][index+1:]
             print(f"{i['id']:2}  {i['attack']:10} {i['defense']:10} {i['attack_strength']:12}"
-                f"{i['model']:11} {i['dataset']:9} {i['accuracy']:5} {i['loss']:5} {i['f1']:5}")
+                f"{name:13} {i['dataset']:9} {i['accuracy']:6} {i['loss'][:5]:6} {i['f1']:5}")
         print()
