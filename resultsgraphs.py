@@ -82,3 +82,14 @@ def defense_bar_graph(results, model, attack='none', defense='none', metric='acc
     plt.ylabel(metric, fontsize=16)
 
     plt.show()
+
+def attack_line_graph(results, model, lines=None, attack='none', attack_strength=0,
+        defense='none', metric='acc', dataset='cifar'):
+
+    assert lines in [None, 'models', 'defenses']
+    if not lines:
+        pass
+    for i in results:
+        pass
+
+    # df = pd.DataFrame(list(zip(names, data)), columns =['Name', metric])
