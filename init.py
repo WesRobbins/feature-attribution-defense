@@ -15,9 +15,6 @@ from resultsgraphs import *
 if not current_settings.local:
     import torchattacks
 
-""" global vars """
-db = database.Database()
-results = db.load_all()
 
 """ path set up """
 if not current_settings.local:
@@ -36,7 +33,6 @@ model_set_names = {
                         ['vgg11_bn', 'vgg13_bn', 'vgg16_bn', 'vgg19_bn', 'densenet121', 'densenet161',
                         'densenet169', 'googlenet', 'inception_v3', 'mobilenet_v2', 'resnet18', 'resnet34',
                         'resnet50'],
-
                     'mnist:':
                         [],
                     'imagenet':
@@ -49,6 +45,10 @@ model_set_names = {
                     'imagenet': []
                     }
 }
+
+""" global vars """
+db = database.Database()
+results = db.load_all(model_set_names)
 
 if not current_settings.local:
     import load_models
