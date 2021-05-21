@@ -68,7 +68,7 @@ class Database:
             'dataset': dataset,
             'accuracy': str(accuracy),
             'loss': str(loss),
-            'l2': str(l2),
+            'f2': str(l2),
             'description': description,
 
         })
@@ -130,5 +130,5 @@ class Database:
             index = i['model'].find('-')
             name = i['model'][index+1:]
             print(f"{i['id']:2}  {i['attack']:10} {i['defense']:10} {i['attack_strength']:12}"
-                f"{name:13} {i['dataset']:9} {i['accuracy']:6} {i['loss'][:5]:6} {i['l2']:5}")
+                f"{name:13} {i['dataset']:9} {i['accuracy']:6} {i['loss'][:5]:6} {i['f1']:5}")
         print()

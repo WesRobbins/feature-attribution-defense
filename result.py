@@ -20,7 +20,7 @@ class Result:
         else: self.loss = float(data['loss'])
         if data['accuracy'] == 'n/a': self.accuracy = 'n/a'
         else: self.accuracy = float(data['accuracy'])
-        if data['l2'] == 'n/a': self.accuracy = 'n/a'
+        if data['f1'] == 'n/a': self.l2 = 'n/a'
         else: self.l2 = float(data['accuracy'])
 
 
