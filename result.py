@@ -1,5 +1,5 @@
 class Result:
-    def __init__(self, input_type, data, model_set_names):
+    def __init__(self, input_type, data):
         assert input_type in ['database', 'runtime']
         self.input_type = input_type
         if input_type == 'database':
@@ -7,7 +7,6 @@ class Result:
         elif input_type == 'runtime':
             self.load_from_runtime(data)
 
-        self.model_set_names = model_set_names
 
     def load_from_database(self, data):
         self.id = int(data['id'])
@@ -25,8 +24,58 @@ class Result:
         if data['l2'] == 'n/a': self.l2 = 'n/a'
         else: self.l2 = float(data['accuracy'])
 
+    def get_dict(self):
+        x = {'id':self.id,
+            'model':self.model,
+            'dataset':self.dataset,
+            'attack':self.attack,
+            'defense':self.defense,
+            'attack_strength':self.attack_strength,
+            'loss':self.loss,
+            'accuracy':self.accuracy,
+            'l2': self.l2
+            }
+        return x
 
 
 
-    def get(id=None, model=None):
-        pass
+
+""" returns results that match parameters
+    - params can be lists or single string
+    - models are required               """
+def get_results(results, id=None, models=None, attacks='none', defenses='none',
+        dataset='cifar'):
+    vals = []
+    for i in results:
+        if id:
+            if int(i.id) not in id:
+                continue
+        if i.model not in models:
+            continue
+        if i.attack not in attacks:
+            continue
+        if i.defense not in defenses:
+            continue
+        if i.dataset not in dataset:
+            continue
+        vals.append(i)
+
+    return vals
+
+def axis_arrays(results, axis='attack_strength', metric='accuracy'):
+    axises = ['model', 'attack', 'defense', 'dataset', 'attack_strength']
+    assert axis in axises
+
+    axises.remove(axis)
+    vals = {}
+    for i in results:
+        i = i.get_dict()
+        li = []
+        for ax in axises:
+            li.append(i[ax])
+        li = tuple(li)
+        if li not in vals.keys():
+            vals[li] = []
+        vals[li].append((i[axis], i[metric]))
+
+    return vals

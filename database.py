@@ -28,14 +28,14 @@ class Database:
         self.table = dynamodb.Table('results2')
         print(self.table.creation_date_time)
 
-    def load_all(self, model_set_names):
+    def load_all(self):
         results = []
         response = self.table.scan(
             FilterExpression=Key('id').gte(0)
         )
         items = response['Items']
         for i in items:
-            results.append(Result('database', i, model_set_names))
+            results.append(Result('database', i))
 
         return results
 
@@ -134,9 +134,9 @@ class Database:
 
     def show_all(self, sort='id'):
         print('\n** All Results in Database **')
-        print('-------------------------------------------------------------------------------')
+        print('----------------------------------------------------------------------------------')
         print('id  attack     defense    atck-stren  model         dataset   acc    loss   l2')
-        print('-------------------------------------------------------------------------------')
+        print('----------------------------------------------------------------------------------')
         response = self.table.scan(
             FilterExpression=Key('id').gte(0)
         )
@@ -148,5 +148,5 @@ class Database:
             index = i['model'].find('-')
             name = i['model'][index+1:]
             print(f"{i['id']:2}  {i['attack']:10} {i['defense']:10} {i['attack_strength']:12}"
-                f"{name:13} {i['dataset']:9} {i['accuracy']:6} {i['loss'][:5]:6} {i['l2']:5}")
+                f"{name:13} {i['dataset']:9} {i['accuracy']:6} {i['loss'][:5]:6} {i['l2'][:5]:6}")
         print()

@@ -31,6 +31,7 @@ def load_models(names):
   print("\n LOADING Models")
   loaded_nets = {}
   for dataset in names:
+      loaded_nets[dataset] = {}
       print(dataset + ':')
       for name in names[dataset]:
         print(name+'..', end='')
@@ -39,7 +40,7 @@ def load_models(names):
         assert os.path.isfile('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/'+dataset+'/state_dicts/'+name+'.pt'), 'Error: no checkpoint directory found!'
         checkpoint = torch.load('/content/drive/MyDrive/feature-attribution/torch-models/checkpoints/'+dataset+'/state_dicts/'+name+'.pt')
         net.load_state_dict(checkpoint)
-        m_name = dataset + '-' + name
+        # m_name = dataset + '-' + name
 
         # norm layer
         norm_layer = Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
@@ -50,7 +51,7 @@ def load_models(names):
         ).to(device)
 
         net = net.eval()
-        loaded_nets[m_name]=net
+        loaded_nets[dataset][name]=net
       print()
     # best_acc = checkpoint['acc']
     # start_epoch = checkpoint['epoch']

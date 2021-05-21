@@ -2,8 +2,10 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+import result
+from result import get_results, axis_arrays
 sns.set_theme(style="whitegrid")
-sns.set(rc={'figure.figsize':(11.7,8.27)})
+# sns.set(rc={'figure.figsize':(11.7,8.27)})
 
 def model_bar_graph(results, attack='none', defense='none', metric='acc', dataset='cifar'):
     new = []
@@ -83,17 +85,20 @@ def defense_bar_graph(results, model, attack='none', defense='none', metric='acc
 
     plt.show()
 
-def attack_line_graph(results, lines_type=None, lines=None, attack='none', attack_strength=0,
-        defense='none', metric='acc', dataset='cifar'):
+def attack_stren_line_graph(results, models, attacks='none',
+        defenses='none', metric='accuracy', dataset='cifar'):
 
-    assert lines in [None, 'models', 'defenses']
-    val = {}
 
-    for i in results:
-        if not lines:
-            if i.attack == attack:
-                val[attack_strength]
-        else:
-            pass
+    data = axis_arrays(get_results(results, models=models, attacks=attacks,
+            defenses=defenses, dataset=dataset))
 
-    # df = pd.DataFrame(list(zip(names, data)), columns =['Name', metric])
+    for key in data.keys():
+        data[key].sort(key=lambda x: x[0])
+        data[key] = [x[1] for x in data[key]]
+
+    data = pd.DataFrame.from_dict(data)
+    data = pd.DataFrame.from_records(data, index=[.001,.01,.05,.1,.2,.3])
+    print(data)
+
+    sns.lineplot(data=data)
+    plt.show()
