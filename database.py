@@ -53,9 +53,6 @@ class Database:
         if dataset == None:
             dataset = current_settings.dataset
 
-        assert attack in ['none', 'fgsm']
-        assert defense in ['none']
-        assert dataset in ['cifar', 'mnist', 'imagenet']
 
 
         self.table.put_item(
