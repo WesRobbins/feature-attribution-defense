@@ -44,11 +44,20 @@ class Result:
     - params can be lists or single string
     - models are required               """
 def get_results(results, id=None, models=None, attacks='none', defenses='none',
-        dataset='cifar'):
+        dataset='cifar', attack_strengths=None):
+
+    if type(attack_strengths) == float:
+        attack_strengths = [attack_strengths]
+
     vals = []
     for i in results:
         if id:
             if int(i.id) not in id:
+                continue
+        if attack_strengths:
+            if type(i.attack_strength) == str:
+                continue
+            elif i.attack_strength not in attack_strengths:
                 continue
         if i.model not in models:
             continue

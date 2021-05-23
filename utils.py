@@ -9,3 +9,10 @@ def get_model_list(model_dict, dataset='all'):
         list = model_dict[dataset]
 
     return list
+
+def list_string(input):
+    if type(input) == str:
+        return input
+    elif type(input) == list:
+        return ', '.join(input)
+        

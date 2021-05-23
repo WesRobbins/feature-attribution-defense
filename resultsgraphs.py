@@ -4,6 +4,9 @@ import seaborn as sns
 import pandas as pd
 import result
 from result import get_results, axis_arrays
+from utils import *
+from analysis import *
+
 sns.set_theme(style="whitegrid")
 # sns.set(rc={'figure.figsize':(11.7,8.27)})
 
@@ -96,9 +99,19 @@ def attack_stren_line_graph(results, models, attacks='none',
         data[key].sort(key=lambda x: x[0])
         data[key] = [x[1] for x in data[key]]
 
+
+
     data = pd.DataFrame.from_dict(data)
     data = pd.DataFrame.from_records(data, index=[.001,.01,.05,.1,.2,.3])
     print(data)
 
+    subtitle_string = "Dataset: " + list_string(dataset) + "      Attack: " + list_string(attacks)+ "      Defense: " + list_string(defenses)
+    plt.title(subtitle_string, fontsize=10, fontweight="bold")
+    plt.suptitle("Model Performance", y=.99, fontsize=18)
+    plt.xlabel('attack strength')
+    plt.ylabel('acc')
     sns.lineplot(data=data)
     plt.show()
+
+def l2_acc_graph(results, models, attacks='fgsm', defenses='none', dataset='cifar', attack_strengths=.1):
+    pass
