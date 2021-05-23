@@ -15,6 +15,7 @@ from utils import *
 # colab only imports
 if not current_settings.local:
     import torchattacks
+    from evaluation import *
 
 
 """ path set up """
@@ -66,3 +67,7 @@ if not current_settings.local:
 
 
 current_settings.print_settings()
+
+config = read_config()
+if config['auto']:
+    pass

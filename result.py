@@ -15,14 +15,13 @@ class Result:
         self.attack = data['attack']
         self.defense = data['defense']
         self.description = data['description']
-        if data['attack_strength'] in ['none', 'n/a']: self.attack_strength = 'n/a'
-        else: self.attack_strength = float(data['attack_strength'])
+        self.attack_strength = data['attack_strength']
         if data['loss'] == 'n/a': self.loss = 'n/a'
         else: self.loss = float(data['loss'])
         if data['accuracy'] == 'n/a': self.accuracy = 'n/a'
         else: self.accuracy = float(data['accuracy'])
         if data['l2'] == 'n/a': self.l2 = 'n/a'
-        else: self.l2 = float(data['accuracy'])
+        else: self.l2 = float(data['l2'])
 
     def get_dict(self):
         x = {'id':self.id,
@@ -54,7 +53,7 @@ def get_results(results, id=None, models=None, attacks='none', defenses='none',
         if id:
             if int(i.id) not in id:
                 continue
-        if attack_strengths:
+        if attack_strengths: # TODO
             if type(i.attack_strength) == str:
                 continue
             elif i.attack_strength not in attack_strengths:

@@ -17,3 +17,20 @@ def l2_acc(results, models, attacks='fgsm', defenses='none', dataset='cifar', at
         vals[key] = (base_re-i.accuracy) / i.l2
 
     return vals
+
+def avg_acc(results, models, attacks='fgsm', defenses='none', dataset='cifar', attack_strengths=.1):
+    re = get_results(results, models=models, attacks=attacks, defenses=defenses,
+            dataset=dataset, attack_strengths=attack_strengths)
+    acc = 0
+    for i in re:
+        acc +=i.accuracy
+
+    return acc/len(re)
+
+def avg_l2_acc_ratio(results, models, attacks='fgsm', defenses='none', dataset='cifar', attack_strengths=.1):
+    vals = l2_acc(results, models, attacks, defenses, dataset, attack_strengths)
+    ratio = 0
+    for i in vals.values():
+        ratio += i
+
+    return ratio/len(x)

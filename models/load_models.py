@@ -15,7 +15,7 @@ from resnet_orig import resnet_orig
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-class Normalize(nn.Module) :
+class Normalize(nn.Module):
     def __init__(self, mean, std) :
         super(Normalize, self).__init__()
         self.register_buffer('mean', torch.Tensor(mean))

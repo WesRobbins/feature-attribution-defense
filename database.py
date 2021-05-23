@@ -41,7 +41,7 @@ class Database:
 
 
 
-    def write_result(self, attack='none', defense='none', attack_strength='n/a',
+    def write(self, attack='none', defense='none', attack_strength='n/a',
                     model=None, dataset=None,
                     accuracy='n/a', loss='n/a', l2='n/a', description='none'):
 
@@ -53,6 +53,8 @@ class Database:
         if dataset == None:
             dataset = current_settings.dataset
 
+        if type(attack_strength) == float:
+            attack_strength = str(attack_strength)
 
 
         self.table.put_item(
@@ -60,7 +62,7 @@ class Database:
             'id': self.get_id(),
             'attack': attack,
             'defense': defense,
-            'attack_strength': str(attack_strength),
+            'attack_strength': attack_strength,
             'model': model,
             'dataset': dataset,
             'accuracy': str(accuracy),
@@ -70,27 +72,29 @@ class Database:
 
         })
 
-    def get_result(self, attack='non', defense='none', attack_strength='none',
-                    model=None, dataset=None):
+    def get(self, id=None, attack='none', defense='none', attack_strength='none',
+                    model=None, dataset='cifar'):
 
         global current_settings
-
 
         if model == None:
             model = current_settings.model_name
         if dataset == None:
             dataset = current_settings.dataset
 
+        if id:
+            response = self.table.get_item(
+            Key={'id': id})
 
-        assert dataset in ['cifar', 'mnist', 'imagenet']
+        else:
 
-        response = table.get_item(
-        Key={
-            'username': 'janedoe',
-            'last_name': 'Doe'
-        })
+            response = self.table.get_item(
+            Key={
+                'username': 'janedoe',
+                'last_name': 'Doe'
+            })
         item = response['Item']
-        print(item)
+        return item
 
     def delete(self, id, id2=None):
         if type(id) == list:
@@ -104,6 +108,55 @@ class Database:
                 Key={
                     'id': id,
                 })
+        elif type(id) == int and id2:
+            for i in range(id, id2+1):
+                try:
+                    response = self.table.delete_item(
+                        Key={
+                            'id': i,
+                        })
+                except:
+                    printf(f'DB: no key {i}')
+
+    def update(self, id, id2=None, dict=None):
+        expr = 'set '
+        count = 1
+        for i in dict.keys():
+            expr += i + '=:' + str(count) + ', '
+            count += 1
+        expr = expr[:-2]
+        print(expr)
+
+        count = 1
+        attr = {}
+        for i in dict.values():
+            key = ':'+str(count)
+            attr[key] = i
+            count += 1
+
+        print(attr)
+        print()
+        print()
+
+        if type(id) == list:
+            for i in id:
+                response = self.table.update_item(
+                    Key={'id': id},
+                    # UpdateExpression="set info.rating=:r, info.plot=:p, info.actors=:a",
+                    ExpressionAttributeValues={
+                        'model': 'Wes 2',
+                    },
+                    ReturnValues="UPDATED_NEW"
+                )
+                return response
+        elif not id2:
+            response = self.table.update_item(
+                Key={'id': id},
+                UpdateExpression=expr,
+                ExpressionAttributeValues=attr,
+                ReturnValues="UPDATED_NEW"
+            )
+            return response
         elif type(id) == int and id2:
             for i in range(id, id2+1):
                 try:
@@ -130,9 +183,9 @@ class Database:
 
     def show_all(self, sort='id'):
         print('\n** All Results in Database **')
-        print('----------------------------------------------------------------------------------')
-        print('id  attack     defense    atck-stren  model         dataset   acc    loss   l2')
-        print('----------------------------------------------------------------------------------')
+        print('---------------------------------------------------------------------------------------')
+        print('id    attack     defense    atck-stren  model         dataset   acc    loss   l2')
+        print('---------------------------------------------------------------------------------------')
         response = self.table.scan(
             FilterExpression=Key('id').gte(0)
         )
@@ -141,8 +194,17 @@ class Database:
         if len(items) == 0:
             print("No items in database\n")
         for i in reversed(items):
-            index = i['model'].find('-')
-            name = i['model'][index+1:]
-            print(f"{i['id']:2}  {i['attack']:10} {i['defense']:10} {i['attack_strength']:12}"
-                f"{name:13} {i['dataset']:9} {i['accuracy']:6} {i['loss'][:5]:6} {i['l2'][:5]:6}")
+            if i['l2'] != 'n/a':
+                l2 = "{:.2e}".format(float(i['l2']))
+            else:
+                l2 = i['l2']
+            if len(i['attack_strength']) == 0:
+                stren = 'n/a'
+            else:
+                stren = ''
+                for j in i['attack_strength'].values():
+                    stren += str(j)+','
+                stren = stren[:-1]
+            print(f"{i['id']:4}  {i['attack']:10} {i['defense']:10} {stren:12}"
+                f"{i['model']:13} {i['dataset']:9} {i['accuracy']:6} {i['loss'][:5]:6} {l2}")
         print()

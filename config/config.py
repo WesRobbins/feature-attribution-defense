@@ -6,8 +6,10 @@ import shutil
 
 local = False
 user = 'wes'
-accepted = ['-local', 'config/config.py','config.py', '-seth', '-wes',
-            '-cmi', '-cm', '-mi', '-ci', '-c', '-m', '-i']
+accepted = ['-local', 'config/config.py','config.py',
+            '-seth', '-wes',
+            '-cmi', '-cm', '-mi', '-ci', '-c', '-m', '-i',
+            '-auto']
 
 for i in sys.argv:
     if i not in accepted:
@@ -23,7 +25,7 @@ elif '-i' in sys.argv:
     datasets = 'imagenet'
 elif '-cmi' in sys.argv:
     datasets = 'cifar,mnist,imagenet'
-    
+
 model_set = 'all_models'
 
 if '-local' in sys.argv:
@@ -31,6 +33,9 @@ if '-local' in sys.argv:
     datasets = ''
     model_set = 'no_models'
 
+auto = False
+if '-auto' in sys.argv:
+    auto=True
 
 if '-seth' in sys.argv:
     user = 'seth'
@@ -53,3 +58,4 @@ with open('config/config.txt', 'w') as f:
     f.write('local:%s\n' % (str(local)))
     f.write('datasets:%s\n' % (datasets))
     f.write('model_set:%s\n' % (model_set))
+    f.write('auto:%s\n' % (str(auto)))
