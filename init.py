@@ -54,6 +54,8 @@ model_list = get_model_list(model_set_names['all_models'])
 db = database.Database()
 results = db.load_all()
 
+attack_strens = [.001, .003, .01, .03, .07, .1, .2, .3]
+
 if not current_settings.local:
     import load_models
     from load_models import load_models
