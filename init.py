@@ -12,6 +12,7 @@ from datasets import data
 from resultsgraphs import *
 from result import *
 from utils import *
+from analysis import *
 # colab only imports
 if not current_settings.local:
     import torchattacks
@@ -62,8 +63,8 @@ if not current_settings.local:
     from load_models import load_models
     from load_models import device
 
-    loaded_models = load_models(model_set_names[current_settings.model_set])
-
+    current_settings.loaded_models = load_models(model_set_names[current_settings.model_set])
+    loaded_model = current_settings.loaded_models
 
 
 current_settings.print_settings()

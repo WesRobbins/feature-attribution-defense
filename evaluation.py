@@ -4,19 +4,16 @@ import torch.optim as optim
 import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
 
+from settings import current_settings
+
 import progressbar
-widgets = [progressbar.Percentage(), progressbar.Bar()]
+widgets = [progressbar.Percentage(), progressbar.Bar(), progressbar.ETA()]
 
 def full_run(db, attack_names, models, attack_strenghts, defense=None, dataset='cifar'):
     for atck in att:
         for model in models:
             for stren in attack_strengths:
                 eval_and_write(db, model, atck, defense, stren, dataset)
-
-def fastest_run(db, defense, model='vgg19_bn', dataset='cifar'):
-    attacks = ['fgsm', 'cw']
-    for atck in attacks:
-        eval_and_write(db, model, atck, defense, stren, dataset)
 
 def eval_and_write(db, net_name, attack=None, defense=None, attack_strength=None, dataset='cifar'):
 
@@ -29,12 +26,12 @@ def eval_and_write(db, net_name, attack=None, defense=None, attack_strength=None
     if not attack_strength:
       attack_strength = 'n/a'
 
-    db.write_result(attack=attack, defense=defense, attack_strength=attack_strength,
+    db.write(attack=attack, defense=defense, attack_strength=attack_strength,
                           model=net_name, dataset=dataset, accuracy=results[0], loss=results[1], l2=results[2])
 
 # returns loss, accuracy
 def evaluation_loop(net_name, dataset, epoch=None, attack=None, defense=None, attack_strength=None):
-    net = loaded_models[dataset][net_name]
+    net = current_settings.loaded_models[dataset][net_name]
     ds_name = dataset + '_tl'
     testloader = data[ds_name]
     criterion = nn.CrossEntropyLoss()
@@ -94,47 +91,48 @@ def get_attack(model, attack_name, attack_strength):
     else:
         eps = None
     if 'steps' in attack_strength.keys():
-        steps = float(attack_strength['steps'])
+        steps = attack_strength['steps']
     else:
         steps = None
     if attack_name == 'fgsm':
-        return torchattacks.FGSM(model, eps=attack_strength)
+        return torchattacks.FGSM(model, eps=eps)
     elif attack_name == 'bim':
-        return torchattacks.BIM(model, eps=attack_strength, steps=steps, alpha=attack_strength/(steps*.5))
+        return torchattacks.BIM(model, eps=eps, steps=steps, alpha=eps/(steps*.5))
     elif attack_name == 'deepfool':
-        return torchattacks.DeepFool(model)
+        return torchattacks.DeepFool(model, steps=steps)
     elif attack_name == 'cw':
         return torchattacks.CW(model)
     elif attack_name == 'pgd':
-        return torchattacks.PGD(model, eps=attack_strength, steps=steps, alpha=attack_strength/(steps*.5))
+        return torchattacks.PGD(model, eps=eps, steps=steps, alpha=eps/(steps*.5))
     elif attack_name == 'rfgsm':
-        return torchattacks.RFGSM(model, eps=attack_strength, alpha=attack_strength)
+        return torchattacks.RFGSM(model, eps=eps, alpha=eps)
     elif attack_name == 'auto-attack':
-        return torchattacks.AutoAttack(model, eps=attack_strength)
+        return torchattacks.AutoAttack(model, eps=eps)
     elif attack_name == 'mifgsm':
-        return torckattacks.MIFGSM(model, eps=attack_strength, steps=steps)
+        return torckattacks.MIFGSM(model, eps=eps, steps=steps)
     elif attack_name == 'square':
-        return torchattacks.Square(model, eps=attack_strength)
+        return torchattacks.Square(model, eps=eps)
     elif attack_name == 'fab':
-        return torchattacks.FAB(model, eps=attack_strength)
+        return torchattacks.FAB(model, eps=eps)
     elif attack_name == 'one-pixel':
         return torchattacks.OnePixel(model)
     elif attack_name == 'gn':
-        return torchattacks.GN(model, sigma=attack_strength)
+        return torchattacks.GN(model, sigma=eps)
     elif attack_name == 'apgd':
-        return torchattacks.APGD(model, eps=attack_strength)
+        return torchattacks.APGD(model, eps=eps)
     elif attack_name == 'eotpgd':
-        return torchattacks.EOTPGD(model, eps=attack_strength, steps=steps, alpha=attack_strength/(steps*.5))
+        return torchattacks.EOTPGD(model, eps=eps, steps=steps, alpha=eps/(steps*.5))
     elif attack_name == 'pgddlr':
-        return torchattacks.PGDDLR(model, eps=attack_strength, steps=steps, alpha=attack_strength/(steps*.5))
+        return torchattacks.PGDDLR(model, eps=eps, steps=steps, alpha=eps/(steps*.5))
     elif attack_name == 'ffgsm':
-        return torchattacks.FFGSM(model, eps=attack_strength, alpha=attack_strength)
+        return torchattacks.FFGSM(model, eps=eps, alpha=eps)
     elif attack_name == 'sparsefool':
         return torchattacks.SparseFool(model)
 
     else:
         print("Attack not valid")
         sys.exit(-1)
+
 
 def get_defense():
   pass

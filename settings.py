@@ -25,6 +25,7 @@ class Settings:
         self.model_name = settings['model_name']
         self.dataset = settings['dataset']
 
+        self.loaded_models = None
 
     def read_settings_file(self):
         with open(self.file_name, 'r') as f:
