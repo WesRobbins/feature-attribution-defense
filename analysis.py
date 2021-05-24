@@ -117,8 +117,9 @@ class Full_Analysis:
             return False
         for i in set:
             dict = i.get_dict()
-            if i[detail] ==
-            total += dict[metric]
+            # TODO 
+            if i[detail] == False:
+                total += dict[metric]
 
         return total/len(set)
     def get_detailed2(self, metric, set, detail, detail2):
