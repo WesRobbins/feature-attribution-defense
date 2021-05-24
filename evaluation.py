@@ -10,6 +10,10 @@ from settings import current_settings
 from datasets import data
 
 import progressbar
+
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+
 widgets = [progressbar.Percentage(), progressbar.Bar(), progressbar.ETA()]
 
 def full_run(db, attack_names, models, attack_strenghts, defense=None, dataset='cifar'):
