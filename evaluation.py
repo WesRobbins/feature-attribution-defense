@@ -116,7 +116,7 @@ def get_attack(model, attack_name, attack_strength):
     elif attack_name == 'auto-attack':
         return torchattacks.AutoAttack(model, eps=eps)
     elif attack_name == 'mifgsm':
-        return torckattacks.MIFGSM(model, eps=eps, steps=steps)
+        return torchattacks.MIFGSM(model, eps=eps, steps=steps)
     elif attack_name == 'square':
         return torchattacks.Square(model, eps=eps)
     elif attack_name == 'fab':
