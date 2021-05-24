@@ -5,6 +5,7 @@ import torch.nn.functional as F
 import torch.backends.cudnn as cudnn
 
 from settings import current_settings
+from dataset import data
 
 import progressbar
 widgets = [progressbar.Percentage(), progressbar.Bar(), progressbar.ETA()]
