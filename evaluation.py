@@ -34,10 +34,10 @@ def eval_and_write(db, net_name, atk=None, defense=None, eps=None, dataset='cifa
       eps = 'n/a'
 
     db.write(atk=atk, defense=defense, eps=eps,
-                          model=net_name, dataset=dataset, accuracy=results[0], loss=results[1], l2=results[2])
+                          model=net_name, dataset=dataset, acc=results[0], loss=results[1], l2=results[2])
 
-# returns loss, accuracy
-def evaluation_loop(net_name, dataset, epoch=None, atk=None, defense=None, eps=None):
+# returns loss, acc
+def evaluation_loop(net_name, dataset, epoch=None, atk=None, defense=None, eps=None, atk_steps=None):
     net = current_settings.loaded_models[dataset][net_name]
     ds_name = dataset + '_tl'
     testloader = data[ds_name]
@@ -51,7 +51,7 @@ def evaluation_loop(net_name, dataset, epoch=None, atk=None, defense=None, eps=N
     if atk:
       # cont = nullcontext()
       l2 = 0
-      atck = get_atk(net, atk, eps)
+      atck = get_atk(net, atk, eps, atk_steps)
     else:
       # cont = torch.no_grad()
       pass
@@ -92,7 +92,7 @@ def evaluation_loop(net_name, dataset, epoch=None, atk=None, defense=None, eps=N
     return acc, loss, l2
 
 
-def get_atk(model, atk_name, eps):
+def get_atk(model, atk_name, eps, steps):
 
     eps = float(eps['eps'])
 
