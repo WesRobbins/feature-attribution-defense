@@ -10,7 +10,6 @@ from settings import current_settings
 import database
 from datasets import data
 from resultsgraphs import *
-from result import *
 from utils import *
 from analysis import *
 # colab only imports

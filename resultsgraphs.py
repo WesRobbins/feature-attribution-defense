@@ -2,8 +2,6 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
-import result
-from result import get_results, axis_arrays
 from utils import *
 from analysis import *
 

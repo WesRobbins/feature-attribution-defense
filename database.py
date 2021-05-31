@@ -19,7 +19,9 @@
 from settings import current_settings
 import boto3
 from boto3.dynamodb.conditions import Key
-from result import Result
+from utils import get_tuple, get_stren
+import datetime
+
 
 class Database:
     def __init__(self):
@@ -34,18 +36,18 @@ class Database:
             FilterExpression=Key('id').gte(0)
         )
         items = response['Items']
-        for i in items:
-            results.append(Result('database', i))
-
-        return results
+        return items
 
 
 
-    def write(self, attack='none', defense='none', attack_strength='n/a',
-                    model=None, dataset=None,
-                    accuracy='n/a', loss='n/a', l2='n/a', description='none'):
 
-        global current_settings
+
+    def write(self, model=None, dataset=None,
+                    atk=None, defense=None, eps=None, atk_steps=None,
+                    acc=None, loss=None, l2=None):
+
+        # global current_settings
+
 
 
         if model == None:
@@ -53,24 +55,10 @@ class Database:
         if dataset == None:
             dataset = current_settings.dataset
 
-        if type(attack_strength) == float:
-            attack_strength = str(attack_strength)
+        item = self.make_item(model, dataset, atk, defense, eps, atk_steps, acc, loss, l2)
 
 
-        self.table.put_item(
-        Item={
-            'id': self.get_id(),
-            'attack': attack,
-            'defense': defense,
-            'attack_strength': attack_strength,
-            'model': model,
-            'dataset': dataset,
-            'accuracy': str(accuracy),
-            'loss': str(loss),
-            'l2': str(l2),
-            'description': description,
-
-        })
+        self.table.put_item(Item=item)
 
     def get(self, id=None, attack='none', defense='none', attack_strength='none',
                     model=None, dataset='cifar'):
@@ -82,7 +70,7 @@ class Database:
         if dataset == None:
             dataset = current_settings.dataset
 
-        if id:
+        if id != None:
             response = self.table.get_item(
             Key={'id': id})
 
@@ -181,7 +169,7 @@ class Database:
 
         return max_id+1
 
-    def show_all(self, sort='id'):
+    def show_all(self):
         print('\n** All Results in Database **')
         print('---------------------------------------------------------------------------------------')
         print('id    attack     defense    atck-stren  model         dataset   acc    loss   l2')
@@ -190,7 +178,8 @@ class Database:
             FilterExpression=Key('id').gte(0)
         )
         items = response['Items']
-        items.sort(key=lambda x: x[sort])
+
+        items.sort(key=lambda x: (x['atk'], x['eps']))
         if len(items) == 0:
             print("No items in database\n")
         for i in reversed(items):
@@ -198,6 +187,31 @@ class Database:
                 l2 = "{:.2e}".format(float(i['l2']))
             else:
                 l2 = i['l2']
+            print(f"{i['id']:4}  {i['atk']:10} {i['defense']:10} {i['eps']:12}"
+                f"{i['model']:13} {i['dataset']:9} {i['acc']:6} {i['loss'][:5]:6} {l2}")
+        print()
+
+    def count(self):
+
+        print('\n** All Results in Database **')
+        print('---------------------------------------------------------------------------------------')
+        print('attack     defense   coiunt  atck-stren  model         dataset   acc    loss   l2')
+        print('---------------------------------------------------------------------------------------')
+        response = self.table.scan(
+            FilterExpression=Key('id').gte(0)
+        )
+        items = response['Items']
+
+        dict = {}
+
+        if len(items) == 0:
+            print("No items in database\n")
+        for i in reversed(items):
+            if i['attack'] in dict.keys():
+                dict[i['attack']] += 1
+            else:
+                dict[i['attack']] = 1
+
             if len(i['attack_strength']) == 0:
                 stren = 'n/a'
             else:
@@ -205,6 +219,78 @@ class Database:
                 for j in i['attack_strength'].values():
                     stren += str(j)+','
                 stren = stren[:-1]
-            print(f"{i['id']:4}  {i['attack']:10} {i['defense']:10} {stren:12}"
-                f"{i['model']:13} {i['dataset']:9} {i['accuracy']:6} {i['loss'][:5]:6} {l2}")
+
+        for i in dict:
+            print(f"{i}     {dict[i]}")
         print()
+
+    def find_missing(self, attack=None, defense='none', strens=True, steps=False, spec=True):
+        response = self.table.scan(
+            FilterExpression=Key('id').gte(0)
+        )
+        items = response['Items']
+        possible = get_tuple(attack, defense, strens, steps)
+
+
+        for i in items:
+            if i['attack'] == attack and i['defense'] == defense:
+                if 'eps' and 'steps' in i['attack_strength'].keys():
+                    t = (i['model'], i['attack_strength']['eps'], int(i['attack_strength']['steps']))
+                elif 'eps' in i['attack_strength'].keys():
+                    t = (i['model'], i['attack_strength']['eps'])
+                elif 'steps' in i['attack_strength'].keys():
+                    t = (i['model'], int(i['attack_strength']['steps']))
+
+
+                try:
+                    possible.remove(t)
+                except:
+                    print(f'not found: {t}')
+
+        print(possible)
+        print(len(possible))
+
+    def make_item(self, model=None, dataset=None,
+                    atk=None, defense=None, eps=None, atk_steps=None,
+                     acc=None, loss=None, l2=None):
+        item = {}
+        now = datetime.datetime.now()
+        time = now.strftime("%Y-%m-%d %H:%M:%S")
+        item['id']=self.get_id()
+        item['time'] = time
+        if not model:
+            item['model']='n/a'
+        else:
+            item['model'] = model
+        if not dataset:
+            item['dataset']='n/a'
+        else:
+            item['dataset']=dataset
+        if not atk:
+            item['atk']='n/a'
+        else:
+            item['atk']=atk
+        if not eps:
+            item['eps']='n/a'
+        else:
+            item['eps']=eps
+        if not atk_steps:
+            item['atk_steps']='n/a'
+        else:
+            item['atk_steps']=atk_steps
+        if not defense:
+            item['defense']='n/a'
+        else:
+            item['defense']=defense
+        if not acc:
+            item['acc']='n/a'
+        if not loss:
+            item['loss']='n/a'
+        else:
+            item['loss']=loss
+        if not l2:
+            item['l2']='n/a'
+        else:
+            item['l2']=l2
+
+        return item

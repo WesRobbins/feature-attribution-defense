@@ -1,5 +1,5 @@
 # functions to analyze results
-from result import *
+
 def l2_acc(results, models, attacks='fgsm', defenses='none', dataset='cifar', attack_strengths=.1):
     re = get_results(results, models=models, attacks=attacks, defenses=defenses,
             dataset=dataset, attack_strengths=attack_strengths)
@@ -111,17 +111,19 @@ class Full_Analysis:
         detailed = {}
         detailed['all'] = get_detailed_val(metric, set, detail)
 
+
     def get_detail_val(self, metric, set, detail):
         total = 0
         if not set:
             return False
         for i in set:
-            dict = i.get_dict()
-            # TODO 
-            if i[detail] == False:
+            for j in se:
+                dict = i.get_dict()
+                # TODO
                 total += dict[metric]
 
         return total/len(set)
+
     def get_detailed2(self, metric, set, detail, detail2):
         pass
 
