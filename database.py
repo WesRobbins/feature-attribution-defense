@@ -21,6 +21,8 @@ import boto3
 from boto3.dynamodb.conditions import Key
 from utils import get_tuple, get_stren
 import datetime
+import decimal
+from decimal import Decimal
 
 
 class Database:
@@ -47,16 +49,12 @@ class Database:
                     acc=None, loss=None, l2=None):
 
         # global current_settings
-
-
-
         if model == None:
             model = current_settings.model_name
         if dataset == None:
             dataset = current_settings.dataset
 
         item = self.make_item(model, dataset, atk, defense, eps, atk_steps, acc, loss, l2)
-
 
         self.table.put_item(Item=item)
 
@@ -179,7 +177,7 @@ class Database:
         )
         items = response['Items']
 
-        items.sort(key=lambda x: (x['atk'], x['eps']))
+        items.sort(key=lambda x: (x['atk']))
         if len(items) == 0:
             print("No items in database\n")
         for i in reversed(items):
@@ -187,7 +185,7 @@ class Database:
                 l2 = "{:.2e}".format(float(i['l2']))
             else:
                 l2 = i['l2']
-            print(f"{i['id']:4}  {i['atk']:10} {i['defense']:10} {i['eps']:12}"
+            print(f"{i['id']:4}  {i['atk']:10} {i['defense']:10} {i['eps']:10}  "
                 f"{i['model']:13} {i['dataset']:9} {i['acc']:6} {i['loss'][:5]:6} {l2}")
         print()
 
@@ -273,7 +271,7 @@ class Database:
         if not eps:
             item['eps']='n/a'
         else:
-            item['eps']=eps
+            item['eps']=Decimal(str(eps))
         if not atk_steps:
             item['atk_steps']='n/a'
         else:
@@ -284,13 +282,15 @@ class Database:
             item['defense']=defense
         if not acc:
             item['acc']='n/a'
+        else:
+            item['acc']=Decimal(str(acc))
         if not loss:
             item['loss']='n/a'
         else:
-            item['loss']=loss
+            item['loss']=Decimal(str(loss))
         if not l2:
             item['l2']='n/a'
         else:
-            item['l2']=l2
+            item['l2']=Decimal(str(l2))
 
         return item
