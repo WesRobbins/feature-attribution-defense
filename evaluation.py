@@ -45,6 +45,7 @@ def evaluation_loop(net_name, dataset, epoch=None, atk=None, defense=None, eps=N
     test_loss = 0
     correct = 0
     total = 0
+    l2=None
     if atk:
       # cont = nullcontext()
       l2 = 0
