@@ -92,7 +92,6 @@ def evaluation_loop(net_name, dataset, epoch=None, atk=None, defense=None, eps=N
 
 def get_atk(model, atk_name, eps, steps):
 
-    eps = float(eps['eps'])
 
     if atk_name == 'fgsm':
         return torchattacks.FGSM(model, eps=eps)
