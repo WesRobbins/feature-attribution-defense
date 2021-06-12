@@ -167,10 +167,18 @@ class Database:
 
         return max_id+1
 
-    def show_all(self):
+    def show_all(self, v=1):
+        if v == 0:
+            self.show0()
+        elif v == 1:
+            self.show1()
+        elif v == 2:
+            self.show2()
+
+    def show2(self):
         print('\n** All Results in Database **')
         print('---------------------------------------------------------------------------------------')
-        print('id    attack     defense    atck-stren  model         dataset   acc    loss   l2')
+        print('id    attack    defense   eps    atk-steps  model        dataset   acc    loss   l2')
         print('---------------------------------------------------------------------------------------')
         response = self.table.scan(
             FilterExpression=Key('id').gte(0)
@@ -271,11 +279,12 @@ class Database:
         if not eps:
             item['eps']='n/a'
         else:
+            print(eps)
             item['eps']=Decimal(str(eps))
         if not atk_steps:
             item['atk_steps']='n/a'
         else:
-            item['atk_steps']=atk_steps
+            item['atk_steps']=Decimal(str(atk_steps))
         if not defense:
             item['defense']='n/a'
         else:

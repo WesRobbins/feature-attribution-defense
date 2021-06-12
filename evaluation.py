@@ -1,20 +1,24 @@
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import torch.nn.functional as F
-import torch.backends.cudnn as cudnn
-
-import torchattacks
 
 from settings import current_settings
-from datasets import data
+if not current_settings.local:
 
-import progressbar
+    import torch
+    import torch.nn as nn
+    import torch.optim as optim
+    import torch.nn.functional as F
+    import torch.backends.cudnn as cudnn
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    import torchattacks
 
 
-widgets = [progressbar.Percentage(), progressbar.Bar(), progressbar.ETA()]
+    from datasets import data
+
+    import progressbar
+
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+
+    widgets = [progressbar.Percentage(), progressbar.Bar(), progressbar.ETA()]
 
 def full_run(db, atk_names, models, attack_strenghts, defense=None, dataset='cifar'):
     for atck in att:
@@ -26,12 +30,6 @@ def eval_and_write(db, net_name, atk=None, defense=None, eps=None, dataset='cifa
 
     results = evaluation_loop(net_name, dataset, atk=atk, defense=defense,
                               eps=eps)
-    if not atk:
-      atk = 'none'
-    if not defense:
-      defense = 'none'
-    if not eps:
-      eps = 'n/a'
 
     db.write(atk=atk, defense=defense, eps=eps,
                           model=net_name, dataset=dataset, acc=results[0], loss=results[1], l2=results[2])

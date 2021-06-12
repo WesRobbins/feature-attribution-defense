@@ -2,7 +2,7 @@ import colorama
 from colorama import Fore, Back, Style
 class Settings:
     def __init__(self):
-        with open('config/config.txt', 'r') as f:
+        with open('./config/config.txt', 'r') as f:
             config_dict = dict(line.strip().split(':') for line in f)
         self.name = config_dict['user']
         self.model_set = config_dict['model_set']
