@@ -167,34 +167,28 @@ class Database:
 
         return max_id+1
 
-    def show_all(self, v=1):
-        if v == 0:
-            self.show0()
-        elif v == 1:
-            self.show1()
-        elif v == 2:
-            self.show2()
+    def show_all(self):
 
-    def show2(self):
         print('\n** All Results in Database **')
-        print('---------------------------------------------------------------------------------------')
-        print('id    attack    defense   eps    atk-steps  model        dataset   acc    loss   l2')
-        print('---------------------------------------------------------------------------------------')
+        print('-----------------------------------------------------------------------------------------')
+        print('id    attack     defense    eps    atk-steps  model         dataset   acc    loss   l2')
+        print('-----------------------------------------------------------------------------------------')
         response = self.table.scan(
             FilterExpression=Key('id').gte(0)
         )
         items = response['Items']
-
+        # print(items)
         items.sort(key=lambda x: (x['atk']))
         if len(items) == 0:
             print("No items in database\n")
         for i in reversed(items):
-            if i['l2'] != 'n/a':
-                l2 = "{:.2e}".format(float(i['l2']))
-            else:
-                l2 = i['l2']
-            print(f"{i['id']:4}  {i['atk']:10} {i['defense']:10} {i['eps']:10}  "
-                f"{i['model']:13} {i['dataset']:9} {i['acc']:6} {i['loss'][:5]:6} {l2}")
+            # if i['l2'] != 'n/a':
+            #     l2 = "{:.2e}".format(float(i['l2']))
+            # else:
+            #     l2 = i['l2']
+
+            print(f"{i['id']:4}  {i['atk']:10} {i['defense']:10} {str(i['eps']):6} {str(i['atk_steps']):10} "
+                f"{i['model']:13} {i['dataset']:9} {str(i['acc']):6} {str(i['loss']):6} {str(i['l2'])}")
         print()
 
     def count(self):
@@ -303,3 +297,12 @@ class Database:
             item['l2']=Decimal(str(l2))
 
         return item
+
+    def rm_test(self):
+        response = self.table.scan(
+            FilterExpression=Key('model').eq('test')
+        )
+        items = response['Items']
+        for i in items:
+            self.delete(i['id'])
+        
